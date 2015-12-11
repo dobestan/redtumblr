@@ -1,0 +1,19 @@
+language: python
+python:
+- '3.5'
+addons:
+  postgresql: '9.4'
+install:
+- pip install -r requirements.txt
+- pip install -r requirements/development.txt
+- pip install coveralls
+before_script:
+- psql -c 'CREATE DATABASE redtumblr;' -U postgres
+script:
+- make migrate
+- make test
+after_success:
+- coveralls
+notifications:
+  slack:
+    secure: QDOceu02RD62BzzvO//+N7mAM3KZkvqTVnBZZvnfC2X8pNxEMwgUcFKr6/9pq4Tgx1g+8coZiJjWx7jJPSzwL0DWofJwa/AKj9Ao0eYrYo5kq5vhUBMqPJsZ+pQWCjnrCc/PKoFJb23AqiZ0vheScbyI86ABFf+zrNWTl/dwB0jsWXD8nCVhFV4EV8hx7utBUjQO7/lcV8iAehDLTUxCSuQ2O5il8XRGoHeHde1zGkxABvrVkNwlfc6ov4n1xpOSJSZ3vbELMYzzWAOoN9i9M3sPWzTDEDDHwMMF/o41xJFdsoLeCsi+U38goO3U1tMsqB/VwHYuX+AF5i4rX0XKL3jl82l6pFVtB/iQg1dUEfiDwui9Why6AE/akPxhjqXcGDt0HbGrVH87Sne35RhQN5Jt2S8MpDR1Eab/RlYB4rrce7wKcCyWhSLsJd4vd/vkRp14pTfuahcxxMAqWsjJ5sJK52GMipboa8/uiytKSRIuJbH/EP2ZTZL/3gWRIV5ytgaseSoogfdb6Y1LUKyPMh2gB+fWwTmqzsT+mIvGUG2j7Li5z7MN8dEcdGUTZnDbrssXJnOt8skZm47IdKD/UeBFEhlAJWDyUrk1ZCM1oEPCgGZW14hAu9i6XoHJIJiabSYx3GJyceYDQ1OaAFExUewokGziAj9rCTrev8SHjjw=
