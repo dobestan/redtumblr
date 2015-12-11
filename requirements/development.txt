@@ -1,0 +1,15 @@
+-r production.txt
+
+# Django
+django-extensions
+django-debug-toolbar
+
+# Tests
+flake8
+django_nose
+coverage
+selenium
+
+# Miscellaneous
+ipython[all]
+Werkzeug
