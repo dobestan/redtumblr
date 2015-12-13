@@ -16,6 +16,17 @@ class Blog(models.Model):
         verbose_name='제목',
     )
 
+    is_blocked = models.BooleanField(
+        default=False,
+        verbose_name='차단 여부',
+        help_text='접속 시, "http://warning.or.kr/"로 Redirect.',
+    )
+    is_deleted = models.BooleanField(
+        default=False,
+        verbose_name='삭제 여부',
+        help_text='접속 시, Response status_code가 404 NOT FOUND.',
+    )
+
     created_at = models.DateTimeField(auto_now_add=True, )
     updated_at = models.DateTimeField(auto_now=True, )
 
@@ -84,3 +95,11 @@ class Blog(models.Model):
                 post.published_at = datetime.fromtimestamp(mktime(published_parsed))
 
                 post.save()
+
+    def update_status(self):
+        """Update status, including blocked, deleted."""
+        from tumblr.utils.status import get_is_blocked, get_is_deleted
+
+        self.is_blocked = get_is_blocked(self.original_url)
+        self.is_deleted = get_is_deleted(self.original_url)
+        self.save()
