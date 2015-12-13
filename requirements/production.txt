@@ -6,3 +6,5 @@ honcho
 Pillow
 feedparser
 requests
+celery
+flower
