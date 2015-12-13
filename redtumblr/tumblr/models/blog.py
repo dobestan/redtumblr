@@ -53,3 +53,34 @@ class Blog(models.Model):
                 post_id=post_id,
             )
         )
+
+    def update_posts(self):
+        """Update new published posts from RSS Feed."""
+        from time import mktime
+        from datetime import datetime
+
+        import feedparser
+
+        feed_result = feedparser.parse(self.get_rss_feed_url())
+
+        for item in feed_result.entries:
+
+            original_url = item.id  # http://dobestan.tumblr.com/post/135046057227
+            post_id = original_url.split('/')[-1]  # 135046057227
+
+            post, created = self.post_set.get_or_create(
+                post_id=post_id,
+            )
+
+            if created:
+                post.title = item.title or str()
+
+                try:
+                    post.description = item.description
+                except:
+                    pass
+
+                published_parsed = item.published_parsed  # time.struct_time
+                post.published_at = datetime.fromtimestamp(mktime(published_parsed))
+
+                post.save()

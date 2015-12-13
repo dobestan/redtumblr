@@ -6,6 +6,9 @@ from tumblr.models.post import Post
 @admin.register(Post)
 class PostModelAdmin(admin.ModelAdmin):
     list_display = admin.ModelAdmin.list_display + (
+        'blog',
+
+        'published_at',
         'created_at',
         'updated_at',
     )
@@ -20,6 +23,7 @@ class PostModelAdmin(admin.ModelAdmin):
     )
 
     readonly_fields = (
+        'published_at',
         'created_at',
         'updated_at',
     )
