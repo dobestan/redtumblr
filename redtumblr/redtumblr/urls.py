@@ -4,6 +4,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from redtumblr.views import *
+from tumblr.views import *
 
 
 urlpatterns = [
@@ -15,4 +16,8 @@ urlpatterns = [
 
         url(r'^contact/$', FacebookMessageRedirectView.as_view(), name='contact'),
     ], namespace='facebook')),
+    url(r'^r/', include([
+        url(r'^(?P<blog_slug>\w+)/$', TumblrBlogRedirectView.as_view(), name='blog'),
+        url(r'^(?P<blog_slug>\w+)/(?P<post_id>\w+)/$', TumblrPostRedirectView.as_view(), name='post'),
+    ], namespace='redirect')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
