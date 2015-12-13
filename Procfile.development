@@ -1,0 +1,4 @@
+web: python redtumblr/manage.py runserver_plus 0.0.0.0:8000
+worker: celery --workdir=redtumblr/ --app=redtumblr.celery:app worker --loglevel INFO
+beat: celery --workdir=redtumblr/ --app=redtumblr.celery:app beat --loglevel INFO
+flower: celery --workdir=redtumblr/ --app=redtumblr.celery:app flower
