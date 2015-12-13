@@ -8,3 +8,4 @@ feedparser
 requests
 celery
 flower
+redis
