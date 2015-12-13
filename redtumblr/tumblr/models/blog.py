@@ -100,6 +100,6 @@ class Blog(models.Model):
         """Update status, including blocked, deleted."""
         from tumblr.utils.status import get_is_blocked, get_is_deleted
 
-        self.is_blocked = get_is_blocked(self.original_url)
-        self.is_deleted = get_is_deleted(self.original_url)
+        self.is_blocked = get_is_blocked(self.get_original_url())
+        self.is_deleted = get_is_deleted(self.get_original_url())
         self.save()

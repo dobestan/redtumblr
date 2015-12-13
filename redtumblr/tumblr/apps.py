@@ -5,4 +5,4 @@ class TumblrAppConfig(AppConfig):
     name = 'tumblr'
 
     def ready(self):
-        pass
+        from tumblr.signals.post_save import post_save_blog
