@@ -1,5 +1,7 @@
 from django.db import models
 
+from tumblr.utils.image import *
+
 
 class PostManager(models.Manager):
 
@@ -30,6 +32,24 @@ class Post(models.Model):
         blank=True,
         null=True,
         verbose_name='발행일',
+    )
+
+    original_html = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='원본 HTML'
+    )
+    representative_image = models.ImageField(
+        upload_to=representative_image_upload_to,
+        blank=True,
+        null=True,
+        verbose_name='대표 이미지',
+    )
+    screenshot_image = models.ImageField(
+        upload_to=screenshot_image_upload_to,
+        blank=True,
+        null=True,
+        verbose_name='스크린샷 이미지',
     )
 
     created_at = models.DateTimeField(auto_now_add=True, )
