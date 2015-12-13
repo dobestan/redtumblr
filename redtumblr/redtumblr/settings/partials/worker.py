@@ -15,6 +15,19 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 
 CELERYBEAT_SCHEDULE = {
+    'Tumblr | Update Blog Feeds': {
+        'task': 'tumblr.tasks.feed.UpdateBlogFeedTask',
+        'schedule': crontab(
+            hour='18',
+        )
+    },
+
+    'Tumblr | Update Blog Status': {
+        'task': 'tumblr.tasks.status.UpdateBlogStatusTask',
+        'schedule': crontab(
+            hour='18',
+        )
+    },
 }
 
 
