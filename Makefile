@@ -10,7 +10,7 @@ clean:
 
 # target: migrate - Migrate all django applications considering app dependencies
 migrate:
-	python redtumblr/manage.py makemigrations
+	python redtumblr/manage.py makemigrations tumblr
 	python redtumblr/manage.py migrate
 
 
