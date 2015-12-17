@@ -103,3 +103,15 @@ class Post(models.Model):
 
         self.screenshot_image = image
         self.save()
+
+        # Save images as Image instance.
+        iframe_url = driver.find_element_by_css_selector('section#posts.content iframe').get_attribute('src')
+        driver.get(iframe_url)
+
+        image_elements = driver.find_elements_by_css_selector('img')
+
+        for image_element in image_elements:
+            original_url = image_element.get_attribute('src')
+            self.image_set.create(
+                original_url=original_url,
+            )
