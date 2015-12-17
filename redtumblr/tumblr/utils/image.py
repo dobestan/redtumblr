@@ -14,3 +14,12 @@ def screenshot_image_upload_to(instance, filename):
         filename='screenshot',
         extension=filename.split('.')[-1],
     )
+
+
+def image_image_upload_to(instance, filename):
+    return "tumblr/{blog_slug}/{post_id}/{filename}.{extension}".format(
+        blog_slug=instance.post.blog.slug,
+        post_id=instance.post_id,
+        filename=instance.hash_id,
+        extension=filename.split('.')[-1],
+    )
