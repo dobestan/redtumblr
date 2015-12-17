@@ -4,6 +4,7 @@ from django.dispatch import receiver
 from tumblr.models import Blog, Post
 from tumblr.tasks.feed import UpdateBlogFeedDetailTask
 from tumblr.tasks.status import UpdateBlogStatusDetailTask
+from tumblr.tasks.crawl import CrawlPostDetailTask
 
 
 @receiver(post_save, sender=Blog)
@@ -20,19 +21,10 @@ def post_save_blog(sender, instance, created, **kwargs):
         feed_task = UpdateBlogFeedDetailTask()
         feed_task.delay(instance.id)
 
-        # Update Blog status
-        status_task = UpdateBlogStatusDetailTask()
-        status_task.delay(instance.id)
-
 
 @receiver(post_save, sender=Post)
 def post_save_post(sender, instance, created, **kwargs):
-    import requests
 
     if created:
-        response = requests.get(instance.get_original_url())
-
-        # Original HTML
-        instance.original_url = response.content
-
-        instance.save()
+        task = CrawlPostDetailTask()
+        task.delay(instance.id)

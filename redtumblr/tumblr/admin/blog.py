@@ -13,6 +13,8 @@ class BlogModelAdmin(admin.ModelAdmin):
     )
 
     list_filter = admin.ModelAdmin.list_filter + (
+        'is_blocked',
+        'is_deleted',
     )
 
     inlines = (

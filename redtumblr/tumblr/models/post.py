@@ -39,6 +39,11 @@ class Post(models.Model):
         null=True,
         verbose_name='원본 HTML'
     )
+    representative_image_url = models.URLField(
+        blank=True,
+        null=True,
+        verbose_name='대표 이미지 URL',
+    )
     representative_image = models.ImageField(
         upload_to=representative_image_upload_to,
         blank=True,
@@ -70,3 +75,31 @@ class Post(models.Model):
 
     def get_original_url(self):
         return self.blog.get_post_url(self.post_id)
+
+    def crawl(self):
+        from django.core.files import File
+        from django.core.files.temp import NamedTemporaryFile
+
+        from selenium import webdriver
+
+        driver = webdriver.PhantomJS()
+        driver.get(self.get_original_url())
+
+        self.original_html = driver.page_source
+
+        try:
+            image_file_png_binary = driver.get_screenshot_as_png()
+
+            image_file_temp = NamedTemporaryFile(delete=True)
+            image_file_temp.write(image_file_png_binary)
+            image_file_temp.flush()
+
+            image = File(image_file_temp)
+            image.name = "{filename}.png".format(
+                filename=self.post_id,
+            )
+        except:
+            image = None
+
+        self.screenshot_image = image
+        self.save()
