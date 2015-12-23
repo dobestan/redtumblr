@@ -7,6 +7,7 @@ class CrawlPostDetailTask(Task):
 
     def run(self, post_id, *args, **kwargs):
         post = Post.objects.get(pk=post_id, )
+        post.crawl_description_images()
         post.crawl()
 
 

@@ -10,3 +10,5 @@ celery
 flower
 redis
 hashids
+lxml
+cssselect

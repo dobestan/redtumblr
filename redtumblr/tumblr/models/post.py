@@ -76,6 +76,30 @@ class Post(models.Model):
     def get_original_url(self):
         return self.blog.get_post_url(self.post_id)
 
+    def create_image(self, original_url):
+        if 'default' not in original_url and\
+                'assets.tumblr.com' not in original_url:
+            self.image_set.create(
+                original_url=original_url,
+            )
+
+    def crawl_description_images(self):
+        import lxml.html
+
+        dom = lxml.html.fromstring(self.description)
+
+        image_elements = dom.cssselect('img')
+        if image_elements:
+            for image_element in image_elements:
+                original_url = image_element.get('src')
+                self.create_image(original_url)
+
+        video_elements = dom.cssselect('video')
+        if video_elements:
+            for video_element in video_elements:
+                original_url = video_element.get('poster')
+                self.create_image(original_url)
+
     def crawl(self):
         from django.core.files import File
         from django.core.files.temp import NamedTemporaryFile
@@ -87,6 +111,7 @@ class Post(models.Model):
 
         self.original_html = driver.page_source
 
+        # Save a post screenshot.
         try:
             image_file_png_binary = driver.get_screenshot_as_png()
 
@@ -105,13 +130,16 @@ class Post(models.Model):
         self.save()
 
         # Save images as Image instance.
-        iframe_url = driver.find_element_by_css_selector('section#posts.content iframe').get_attribute('src')
-        driver.get(iframe_url)
+        try:
+            iframe_url = driver.find_element_by_css_selector('section#posts.content iframe').get_attribute('src')
+            driver.get(iframe_url)
 
-        image_elements = driver.find_elements_by_css_selector('img')
-
-        for image_element in image_elements:
-            original_url = image_element.get_attribute('src')
-            self.image_set.create(
-                original_url=original_url,
-            )
+            image_elements = driver.find_elements_by_css_selector('img')
+            if image_elements:
+                for image_element in image_elements:
+                    original_url = image_element.get_attribute('src')
+                    self.image_set.create(
+                        original_url=original_url,
+                    )
+        except:
+            pass
